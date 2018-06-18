@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 function Square(props) {
     return (
-      <button className="square" onClick={props.onClick}>
+      <button className="square" onClick={props.onClick} style={{border: 'solid 1px '+ props.borderColor, color: props.color}}>
         {props.value}
       </button>
     );
