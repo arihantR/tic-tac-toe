@@ -1,17 +1,20 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Square from './Square';
 
 class Board extends React.Component {
-    initialState = {
+    constructor(props) {
+      super(props);
+      let xIsNext = false;
+      if( (props.piece === 'X' && props.turn === "first") || (props.piece === '0' && props.turn === "second") ) {
+        xIsNext = true;
+      }
+      this.state = {
         squares: Array(9).fill(null),     
-        xIsNext: true,    // first turn X by default
+        xIsNext: xIsNext,    // first turn X by default
         winSquares: null,
         color: null
-    };
-    constructor(props) {
-        super(props);
-        this.state = this.initialState;
-      }
+      };
+    }
   
     handleClick(i) {
       const squares = this.state.squares.slice();
@@ -20,10 +23,6 @@ class Board extends React.Component {
       }
       squares[i] = this.state.xIsNext ? 'X' : 'O'; //taking turns
       this.setState({squares: squares, xIsNext: !this.state.xIsNext});
-    }
-
-    reset() {
-        this.setState(this.initialState);
     }
   
     renderSquare(i) {
@@ -48,8 +47,8 @@ class Board extends React.Component {
         let status;
         if (result && result.winner) {
             status = 'Winner: ' + result.winner;
-            this.state.color = '#ff0000';
-            this.state.winSquares = result.winSquares;
+            this.setState({ color: '#ff0000' });
+            this.setState({ winSquares: result.winSquares });
         } else {
           status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); //display who's next 
         }
@@ -72,9 +71,7 @@ class Board extends React.Component {
             {this.renderSquare(7)}
             {this.renderSquare(8)}
           </div>
-          <div id="resetSection"> <br/>
-            <button id = "reset" onClick={() => this.reset()}>Play again</button>
-            </div>
+        
         </div>
       );
     }
