@@ -4,42 +4,91 @@ import Square from './Square';
 class Board extends React.Component {
     constructor(props) {
       super(props);
-      let xIsNext = false;
+      let xIsNext = false, isBotTurn = false;
       if( (props.piece === 'X' && props.turn === "first") || (props.piece === '0' && props.turn === "second") ) {
         xIsNext = true;
       }
+      if(props.mode === "one") {
+        if(props.turn === "first") {
+          isBotTurn = false;
+        } else {
+          isBotTurn = true;
+        }
+      }
       this.state = {
-        squares: Array(9).fill(null),     
-        xIsNext: xIsNext,    // first turn X by default
+        squares: Array(9).fill(null),    
+        xIsNext: xIsNext,
         winSquares: null,
-        color: null
+        color: null,
+        isBotTurn: isBotTurn,
+        filledCount: 0,
+        mode: props.mode
       };
+      this.handleBotTurn = this.handleBotTurn.bind(this);
     }
-  
+    handleBotTurn() {
+      do{
+        var randomNo = Math.round(Math.random()*8);
+      } while(this.state.squares[randomNo])
+      this.handleClick(randomNo);
+    }
+    componentDidMount() {
+      if(this.state.isBotTurn) {
+        var that = this;
+        setTimeout( function() {
+          that.handleBotTurn();
+        }, 3000);
+      }
+    }
+    componentDidUpdate() {
+      if(this.state.isBotTurn) {
+        var that = this;
+        setTimeout( function() {
+          that.handleBotTurn();
+        }, 3000);
+      }
+    }
+   
     handleClick(i) {
       const squares = this.state.squares.slice();
       if (calculateWinner(squares) || squares[i]) {
         return;
       }
       squares[i] = this.state.xIsNext ? 'X' : 'O'; //taking turns
-      this.setState({squares: squares, xIsNext: !this.state.xIsNext});
+      let isBotTurn;
+      if(this.state.mode === "two" ) {
+        isBotTurn = false;
+      } else {
+        isBotTurn = !this.state.isBotTurn;
+      }
+      let result = calculateWinner(squares), winSquares;
+      if( result ) {
+          winSquares = result.winSquares;
+      }
+      this.setState({squares: squares, xIsNext: !this.state.xIsNext,
+        isBotTurn: isBotTurn, filledCount: this.state.filledCount + 1, winSquares: winSquares});
     }
   
     renderSquare(i) {
-        let color, borderColor;
-        this.state.squares[i] === 'X'? (color = '#0000ff') : (color = '#ff0000');
-        if(this.state.winSquares && this.state.winSquares.indexOf(i)!== -1) {
-            color = '#00ff00';
-        } 
-        this.state.xIsNext ? (borderColor = '#0000ff') : (borderColor = '#ff0000')
+      let color;
+      this.state.squares[i] === 'X'? (color = '#0000ff') : (color = '#ff0000');
+      if(this.state.winSquares && this.state.winSquares.indexOf(i)!== -1) {
+          color = '#00ff00';
+      } 
+      if(!this.state.isBotTurn) {
         return (
-            <Square id={"square_"+i}
-                color={color}
-                borderColor={borderColor}
-                value={this.state.squares[i]}
-                onClick={() => this.handleClick(i)}
-            />
+          <Square id={"square_"+i} color={color}
+          value={this.state.squares[i]}
+          onClick={() => this.handleClick(i)}
+          />
         );
+      } else {
+        return (
+          <Square id={"square_"+i} color={color}
+          value={this.state.squares[i]}
+          />
+        );
+      }
     }
     
     render() {
@@ -47,8 +96,8 @@ class Board extends React.Component {
         let status;
         if (result && result.winner) {
             status = 'Winner: ' + result.winner;
-            this.setState({ color: '#ff0000' });
-            this.setState({ winSquares: result.winSquares });
+        } else if(this.state.filledCount === 9) {
+          status = "Match Drawn";	
         } else {
           status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O'); //display who's next 
         }

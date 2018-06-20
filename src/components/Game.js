@@ -8,7 +8,7 @@ class Game extends Component {
 		this.state = {
             mode: null, piece: null, turn: null, gotGameInfo: false
         };
-		// // this.handleModeChange = this.handleModeChange.bind(this);
+		this.handleModeChange = this.handleModeChange.bind(this);
 		this.handlePieceChange = this.handlePieceChange.bind(this);
 		this.handleTurnChange = this.handleTurnChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -36,7 +36,7 @@ class Game extends Component {
 			return (
 				<div className="game">
 					<div className="game-board">
-					  <Board piece={this.state.piece} turn={this.state.turn}/>
+					  <Board mode={this.state.mode} piece={this.state.piece} turn={this.state.turn}/>
 					</div>
 					<div id="resetSection"> <br/><button id = "reset" onClick={() => this.reset()}>Play again</button></div>
 				</div>
@@ -45,10 +45,10 @@ class Game extends Component {
 			return (
 				<form onSubmit={this.handleSubmit}>
 					
-					{/* Choose Game mode:
+					Choose Game mode:
 					<input type="radio" name="mode" value="one" onChange={this.handleModeChange}/> One Player
 					<input type="radio" name="mode" value="two" onChange={this.handleModeChange}/> Two Player						
-					<br/> */}
+					<br/>
 					
 					Choose 'X' or '0':
 					<input type="radio" name="piece" value="X" onChange={this.handlePieceChange}/> X
