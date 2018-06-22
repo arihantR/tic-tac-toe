@@ -56,13 +56,12 @@ class Game extends Component {
                         <Board mode={this.state.mode} difficultyLevel={this.state.difficultyLevel}
                             piece={this.state.piece} turn={this.state.turn} />
                     </div>
-                    <div id="resetSection"> <br /><button id="reset" onClick={() => this.reset()}>Play again</button></div>
+                    <div id="resetSection"> <br /><button id="reset" onClick={() => this.reset()}>Reset</button></div>
                 </div>
             );
         } else {
             return (
                 <form onSubmit={this.handleSubmit}>
-
                     Choose Game mode:
 					<input type="radio" name="mode" value="one" onChange={this.handleModeChange} /> One Player
 					<input type="radio" name="mode" value="two" onChange={this.handleModeChange} /> Two Player

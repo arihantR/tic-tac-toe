@@ -29,6 +29,7 @@ class Board extends React.Component {
       this.handleBotTurn = this.handleBotTurn.bind(this);
       this.getPossibleWinScenario = this.getPossibleWinScenario.bind(this);
     }
+    
     possibleWinScenario = null;
     getPossibleWinScenario() {
       let possibleWinScenario = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
@@ -55,11 +56,17 @@ class Board extends React.Component {
           move = c;
           break;
         }
-        if((this.state.squares[a] === this.state.piece) && (this.state.squares[a] === this.state.squares[b]) && !this.state.squares[c]) {
-          move = c;
-          break;
+      }
+      if(!move) {
+        for (let i = 0; i < this.possibleWinScenario.length; i++) {
+          const [a, b, c] = this.possibleWinScenario[i];
+          if((this.state.squares[a] === this.state.piece) && (this.state.squares[a] === this.state.squares[b]) && !this.state.squares[c]) {
+            move = c;
+            break;
+          }
         }
       }
+      
       if(move>-1 && !this.state.squares[move]) { 
         this.handleClick(move);
       } else {
@@ -73,6 +80,7 @@ class Board extends React.Component {
       this.handleClick(randomNo);
     }
     componentDidMount() {
+      this.initialState = this.state;
       if(this.state.mode === "one") {
         this.possibleWinScenario = this.getPossibleWinScenario();
       }
@@ -133,7 +141,9 @@ class Board extends React.Component {
         );
       }
     }
-    
+    reset() {
+      this.setState(this.initialState);
+    }
     render() {
         const result = calculateWinner(this.state.squares);
         let status;
@@ -163,7 +173,7 @@ class Board extends React.Component {
             {this.renderSquare(7)}
             {this.renderSquare(8)}
           </div>
-        
+          <div id="restartSection"> <br /><button id="reset" onClick={() => this.reset()}>Play Again</button></div>
         </div>
       );
     }
