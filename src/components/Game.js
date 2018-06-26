@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import '../ticTacToe.css';
 import Board from './Board';
+import Radio from '@material-ui/core/Radio'
 
 class Game extends Component {
     constructor(props) {
@@ -63,15 +64,15 @@ class Game extends Component {
             return (
                 <form onSubmit={this.handleSubmit}>
                     Choose Game mode:
-					<input type="radio" name="mode" value="one" onChange={this.handleModeChange} /> One Player
-					<input type="radio" name="mode" value="two" onChange={this.handleModeChange} /> Two Player
+					<Radio name="mode" value="one" onChange={this.handleModeChange} /> One Player
+					<Radio name="mode" value="two" onChange={this.handleModeChange} /> Two Player
 					<br />
 
                     {this.state.mode === 'one' ? levelInput : null}
 
                     Choose 'X' or '0':
-					<input type="radio" name="piece" value="X" onChange={this.handlePieceChange} /> X
-					<input type="radio" name="piece" value="0" onChange={this.handlePieceChange} /> 0
+					<Radio name="piece" value="X" onChange={this.handlePieceChange} /> X
+					<Radio name="piece" value="0" onChange={this.handlePieceChange} /> 0
 					<br />
 
                     Which turn ?
